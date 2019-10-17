@@ -1,21 +1,9 @@
 ---
 title: "Brownlows Bets"
-author: "Your Name"
-date: "Year 2019"
-output: 
-  html_document:
-    number_sections: true
-    toc: true
----
-
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-require(tidyverse)
-require(tidyverse)
-```
-### `r as.character(Sys.Date())`
-
-
+author: "Corine Romero"
+date: "October 16, 2019"
+output: html_document: default
+ ---
 
 <!-- We recommend you use git branches -- create a separate branch for each major section i.e. Introduction, Methods, Results, Inferential Results, and Discussion and Conclusions - leave the YAML block untouched until the final merge where you put in your own name !-->
 
@@ -29,18 +17,60 @@ require(tidyverse)
 
 <!--Decide on your methods:  In this section explain the approach you will take to attack the issue --- how will you decide on a likely estimate of professor Brownlow's earnings or losses after 1137 bets. Also explain how you construct a 95% confidence interval about your estimate of his winnings !-->
 
+We set up a dataset of Birthdays containing all the days of the year and then run the sample 35 times with replacement, if there is the same birthdate 2 or more times Brownlow bank goes up by $1 or if no repeats accure Brownlow Bank goes down by $2.  We will repeat this 1137 times.  Then we will set up a histogram with a 95% confidence with %5 in the beginning and %5 in the end.  
 
-#Profit Estimate
+# Profit Estimate
 
 <!--Explain and display the results of your method of coming up with the estimate of professor Brownlows betting!-->
+First we create the year data and a vector to containsamples
+```{r}
+Bdays = 1:365
+Bsamples = vector('numeric')
+Totaldollars = 0
+Savedollars = vector ('numeric')
+```
+
+run the simulation 1137 times.
+```{r}
+for(loop in 1:1000) {
+
+Totaldollars=0
+for(i in 1:1137) {
+Bsamples = sample(Bdays,35 , replace=TRUE)
+if (length(unique(Bsamples)) == 35) {
+  Totaldollars = Totaldollars -2
+} else {
+  Totaldollars = Totaldollars +1
+}
+}
+Savedollars[loop] = Totaldollars
+}
+hist(Savedollars)
+print(mean(Savedollars))
+```
 
 
-# Confidence interval of Brownlows earning
+# Confidence interval of Brownlow's earning
 
 <!--Explain and display your method of coming up with a 95% confidence interval of  professor Brownlows-->
+```{r}
+stdevDollars = sd(Savedollars)
+meandollars= mean(Savedollars)
+CI = c(meandollars-2*stdevDollars, meandollars+2*stdevDollars)
+
+print(CI)
+```
 
 
 # Discussion and Conclusion
 
 <!--Discussion and conclusion here.  If professor Brownlow is consistantly making or losing money how could he change his payout so that his profits center on zero?  Also discuss what size his class should be in order to have his current scheme balance at zero profit.!-->
+
+In order for Profesor Brownlow to come out even or close to even he must reduce the number of students in the class to 27 to 28 students.  For him to come out exactly even he must have a 27 and a half of a student.  If he wants to make more money he would have to have more than 35 students in the class and if he wanted to lose money he would make this bet with a class of less than 35 students.  Does Professor Brownlow report this in his taxes?
+
+With a class size of 35 there is a 95% confidence that the sampling will come in with a profitbetween 424.00 and 581.00.
+
+If we change the payouts to +$1 if he wins and -$4.50 if he loses Professor Brownlow would break even.
+
+
 
